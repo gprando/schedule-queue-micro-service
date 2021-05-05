@@ -1,0 +1,7 @@
+node_modules
+.git
+.editorconfig
+.eslintignore
+.eslintrc.json
+prettier.config.js
+README.md

@@ -1,0 +1,107 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: micro service agenda
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: gprando55@gmail.com
+servers:
+  - url: http://localhost:3333
+paths:
+  /business/integration:
+    post:
+      summary: integration route
+      description: route that lists all pipedrive deals, filters out those with status equal to earnings, adds to the bank and bling
+      tags:
+        - business
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sucess'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+
+
+components:
+  parameters:
+    id:
+      required: true
+      description: 'business id'
+      name: id
+      in: path
+      schema:
+        type: string
+
+  schemas:
+    sucess:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+
+    NotFound:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    InternalServerError:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    paginated:
+      type: object
+      required:
+        - total_count
+        - page
+        - limit
+        - data
+      properties:
+        total_count:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+              type: string
+              total:
+                type: number
+              day:
+                type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
