@@ -1,4 +1,4 @@
-import { IResponseFrank } from '@/container/providers/Frankfurter/models/IFrankfurterProvider';
+import { IResponseFrank } from '@/container/providers/FrankfurterProvider/models/IFrankfurterProvider';
 
 /* eslint-disable import/prefer-default-export */
 export const formatDate = (d: Date): string => {
@@ -54,3 +54,7 @@ export const genereteFakeDataFrank = (): IResponseFrank => {
     },
   };
 };
+
+export function hasKey<O>(obj: O, key: keyof any): key is keyof O {
+  return key in obj;
+}

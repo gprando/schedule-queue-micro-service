@@ -1,24 +1,27 @@
-import FakeFrankfurterProvider from '@/container/providers/Frankfurter/fakes/FakeFrankfurterProvider';
-import FakeMailProvider from '@/container/providers/MailProvider/fakes/FakeMailProvider';
+import 'reflect-metadata';
+
+import FakeAgendaProvider from '@/container/providers/AgendaProvider/fakes/FakeAgendaProvider';
+import FakeFrankfurterProvider from '@/container/providers/FrankfurterProvider/fakes/FakeFrankfurterProvider';
 import FakeLogsRepository from '@/repositories/fakes/FakeLogsRepository';
 import { genereteFakeDataFrank } from '@/utils/helpers';
 import QuotationConsultationService from './QuotationConsultationService';
 
 let fakeLogsRepository: FakeLogsRepository;
-let fakeMailProvider: FakeMailProvider;
+let fakeAgendaProvider: FakeAgendaProvider;
 let fakeFrankfurterProvider: FakeFrankfurterProvider;
 let quotationConsultationService: QuotationConsultationService;
 
 describe('QuotationConsultationService', () => {
   beforeEach(() => {
     fakeLogsRepository = new FakeLogsRepository();
-    fakeMailProvider = new FakeMailProvider();
+
+    fakeAgendaProvider = new FakeAgendaProvider();
     fakeFrankfurterProvider = new FakeFrankfurterProvider();
 
     quotationConsultationService = new QuotationConsultationService(
       fakeLogsRepository,
-      fakeMailProvider,
       fakeFrankfurterProvider,
+      fakeAgendaProvider,
     );
   });
 
@@ -42,8 +45,7 @@ describe('QuotationConsultationService', () => {
     ]);
     const response = await quotationConsultationService.execute(data);
 
-    expect(response.page).toBe(1);
-    expect(response.limit).toBe(10);
+    expect(response.base).toBe('BRL');
   });
 
   it('should be able to create a new log if not exist in date', async () => {
@@ -56,7 +58,6 @@ describe('QuotationConsultationService', () => {
 
     const response = await quotationConsultationService.execute(data);
 
-    expect(response.page).toBe(1);
-    expect(response.limit).toBe(10);
+    expect(response.client_email).toBe('gprando55@gmail.com');
   });
 });

@@ -1,2 +1,3 @@
 import './MailProvider';
-import './Frankfurter';
+import './FrankfurterProvider';
+import './AgendaProvider';

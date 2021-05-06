@@ -1,10 +1,10 @@
-import { IPaginatedLogDTO } from '@/dtos';
+import { ICreateLogDTO } from '@/dtos';
 import ILogsRepository from '@/repositories/ILogsRepository';
-import IFrankfurterProvider from '@/container/providers/Frankfurter/models/IFrankfurterProvider';
-import IMailProvider from '@/container/providers/MailProvider/models/IMailProvider';
+import IFrankfurterProvider from '@/container/providers/FrankfurterProvider/models/IFrankfurterProvider';
 import { inject, injectable } from 'tsyringe';
 import { formatDate } from '@/utils/helpers';
-// import logger from '@/utils/logger';
+import IAgendaProvider from '@/container/providers/AgendaProvider/models/IAgendaProvider';
+import Log from '@/infra/typeorm/schemas/Log';
 
 type IRequestData = {
   name: string;
@@ -19,11 +19,11 @@ class QuotationConsultationService {
     @inject('LogsRepository')
     private logsRepository: ILogsRepository,
 
-    @inject('MailProvider')
-    private mailProvider: IMailProvider,
-
     @inject('FrankfurterProvider')
     private frankfurterProvider: IFrankfurterProvider,
+
+    @inject('AgendaProvider')
+    private agendaProvider: IAgendaProvider,
   ) {}
 
   async execute({
@@ -31,34 +31,40 @@ class QuotationConsultationService {
     email,
     from_currency,
     send_date,
-  }: IRequestData): Promise<IPaginatedLogDTO> {
+  }: IRequestData): Promise<Log> {
     const currentDate = new Date();
 
     const stringCurrentDate = formatDate(currentDate);
 
     const existsLog = await this.logsRepository.findByDate(stringCurrentDate);
 
+    let log: ICreateLogDTO | Log | undefined = existsLog;
+
     if (!existsLog) {
       const data = await this.frankfurterProvider.getData(from_currency);
 
       const { amount, base, date, rates } = data;
-      const log = {
+      log = {
         amount,
         base,
         date,
         ...rates,
         client_name: name,
         client_email: email,
-      };
+      } as ICreateLogDTO;
       await this.logsRepository.create([log]);
     }
 
-    const result = await this.logsRepository.findAllPaginated({
-      page: 1,
-      limit: 10,
+    const send_in_minutes =
+      (currentDate.getTime() - new Date(send_date).getTime()) / 60000;
+    await this.agendaProvider.scheduleMailQuotation({
+      send_in_minutes,
+      email,
+      name,
+      log: log as Log,
     });
 
-    return result;
+    return log as Log;
   }
 }
 
