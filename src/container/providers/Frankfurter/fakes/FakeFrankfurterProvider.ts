@@ -1,8 +1,12 @@
+import { genereteFakeDataFrank } from '@/utils/helpers';
 import logger from '@/utils/logger';
-import IFrankfurterProvider from '../models/IFrankfurterProvider';
+import IFrankfurterProvider, {
+  IResponseFrank,
+} from '../models/IFrankfurterProvider';
 
 export default class FakeFrankfurterProvider implements IFrankfurterProvider {
-  public async getData(from = 'BRL'): Promise<any> {
-    logger.info(`get fake data from: ${from}. into fake bling`);
+  public async getData(from = 'BRL'): Promise<IResponseFrank> {
+    logger.info(from);
+    return genereteFakeDataFrank();
   }
 }

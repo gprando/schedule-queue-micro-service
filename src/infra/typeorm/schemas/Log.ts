@@ -19,106 +19,109 @@ export default class Log {
   base: string;
 
   @Column()
+  client_name: string;
+
+  @Column()
+  client_email: string;
+
+  @Column()
   date: string;
 
   @Column()
-  rates: string;
+  AUD: number;
 
   @Column()
-  AUD: string;
+  BGN: number;
 
   @Column()
-  BGN: string;
+  CAD: number;
 
   @Column()
-  CAD: string;
+  CHF: number;
 
   @Column()
-  CHF: string;
+  CNY: number;
 
   @Column()
-  CNY: string;
+  CZK: number;
 
   @Column()
-  CZK: string;
+  DKK: number;
 
   @Column()
-  DKK: string;
+  EUR: number;
 
   @Column()
-  EUR: string;
+  GBP: number;
 
   @Column()
-  GBP: string;
+  HKD: number;
 
   @Column()
-  HKD: string;
+  HRK: number;
 
   @Column()
-  HRK: string;
+  HUF: number;
 
   @Column()
-  HUF: string;
+  IDR: number;
 
   @Column()
-  IDR: string;
+  ILS: number;
 
   @Column()
-  ILS: string;
+  INR: number;
 
   @Column()
-  INR: string;
+  ISK: number;
 
   @Column()
-  ISK: string;
+  JPY: number;
 
   @Column()
-  JPY: string;
+  KRW: number;
 
   @Column()
-  KRW: string;
+  MXN: number;
 
   @Column()
-  MXN: string;
+  MYR: number;
 
   @Column()
-  MYR: string;
+  NOK: number;
 
   @Column()
-  NOK: string;
+  NZD: number;
 
   @Column()
-  NZD: string;
+  PHP: number;
 
   @Column()
-  PHP: string;
+  PLN: number;
 
   @Column()
-  PLN: string;
+  RON: number;
 
   @Column()
-  RON: string;
+  RUB: number;
 
   @Column()
-  RUB: string;
+  SEK: number;
 
   @Column()
-  SEK: string;
+  SGD: number;
 
   @Column()
-  SGD: string;
+  THB: number;
 
   @Column()
-  THB: string;
+  TRY: number;
 
   @Column()
-  TRY: string;
+  USD: number;
 
   @Column()
-  USD: string;
-
-  @Column()
-  ZAR: string;
+  ZAR: number;
 
   @CreateDateColumn()
   created_at: Date;

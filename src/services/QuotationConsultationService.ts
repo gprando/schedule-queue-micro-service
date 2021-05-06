@@ -3,7 +3,8 @@ import ILogsRepository from '@/repositories/ILogsRepository';
 import IFrankfurterProvider from '@/container/providers/Frankfurter/models/IFrankfurterProvider';
 import IMailProvider from '@/container/providers/MailProvider/models/IMailProvider';
 import { inject, injectable } from 'tsyringe';
-import logger from '@/utils/logger';
+import { formatDate } from '@/utils/helpers';
+// import logger from '@/utils/logger';
 
 type IRequestData = {
   name: string;
@@ -31,21 +32,30 @@ class QuotationConsultationService {
     from_currency,
     send_date,
   }: IRequestData): Promise<IPaginatedLogDTO> {
-    const data = await this.frankfurterProvider.getData(from_currency);
-    logger.info({
-      name,
-      email,
-      from_currency,
-      send_date,
-      data,
-    });
+    const currentDate = new Date();
 
-    // ver se já tem o resultado no dia, se tiver não salva, se tiver salva
-    // depois agendar email pro maluco
+    const stringCurrentDate = formatDate(currentDate);
+
+    const existsLog = await this.logsRepository.findByDate(stringCurrentDate);
+
+    if (!existsLog) {
+      const data = await this.frankfurterProvider.getData(from_currency);
+
+      const { amount, base, date, rates } = data;
+      const log = {
+        amount,
+        base,
+        date,
+        ...rates,
+        client_name: name,
+        client_email: email,
+      };
+      await this.logsRepository.create([log]);
+    }
 
     const result = await this.logsRepository.findAllPaginated({
       page: 1,
-      limit: 1,
+      limit: 10,
     });
 
     return result;

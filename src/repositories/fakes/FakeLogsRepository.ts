@@ -15,8 +15,8 @@ export default class FakeLogRepository implements ILogsRepository {
     return log;
   }
 
-  public async findByCode(code: number): Promise<Log | undefined> {
-    const log = this.logs.find(b => b.code === code);
+  public async findByDate(date: string): Promise<Log | undefined> {
+    const log = this.logs.find(b => b.date === date);
 
     return log;
   }
@@ -61,14 +61,7 @@ export default class FakeLogRepository implements ILogsRepository {
     const createdLog = data.map(log => {
       const newLog = new Log();
 
-      Object.assign(
-        newLog,
-        { id: new ObjectID() },
-        {
-          client_name: log.client_name,
-          code: log.code,
-        },
-      );
+      Object.assign(newLog, log);
 
       this.logs.push(newLog);
       return newLog;

@@ -18,21 +18,15 @@ export default class LogsRepository implements ILogsRepository {
       throw new AppError('Object id inválid');
     }
 
-    const log = await this.ormRepository.findOne(id);
-
-    return log;
+    return this.ormRepository.findOne(id);
   }
 
-  public async findByCode(code: number): Promise<Log | undefined> {
-    const log = await this.ormRepository.findOne({ where: { code } });
-
-    return log;
+  public async findByDate(date: string): Promise<Log | undefined> {
+    return this.ormRepository.findOne({ where: { date } });
   }
 
   public async findAll(): Promise<Log[] | undefined> {
-    const foundLog = await this.ormRepository.find();
-
-    return foundLog;
+    return this.ormRepository.find();
   }
 
   public async findAllPaginated({
@@ -57,10 +51,7 @@ export default class LogsRepository implements ILogsRepository {
 
   public async create(data: ICreateLogDTO[]): Promise<Log[]> {
     const arrayLog = data.map(d => {
-      return this.ormRepository.create({
-        client_name: d.client_name,
-        code: d.code,
-      });
+      return this.ormRepository.create(d);
     });
 
     await this.ormRepository.save(arrayLog);
