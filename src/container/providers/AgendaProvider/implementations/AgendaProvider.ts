@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import IAgendaProvider from '@/container/providers/AgendaProvider/models/IAgendaProvider';
 import { hasKey } from '@/utils/helpers';
+import logger from '@/utils/logger';
 import IMailProvider from '../../MailProvider/models/IMailProvider';
 import ISendMailDTO from '../../MailProvider/dtos/ISendMailDTO';
 import IScheduleAgendaQuotation from '../dtos/IScheduleAgendaQuotationDTO';
@@ -84,6 +85,8 @@ class AgendaProvider implements IAgendaProvider {
     log,
   }: IScheduleAgendaQuotation): Promise<void> {
     await this.agenda.start();
+    logger.info({ send_in_minutes });
+
     await this.agenda.schedule(
       `in ${send_in_minutes} minutes`,
       'send-email-quotation',

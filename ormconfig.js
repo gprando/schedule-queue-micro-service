@@ -6,7 +6,7 @@ module.exports = {
   useUnifiedTopology: true,
   host: process.env.MONGO_HOST || 'localhost',
   port: process.env.MONGO_PORT || 27017,
-  database: 'data',
+  database: process.env.NODE_ENV === 'test' ? 'db_test': 'data',
   synchronize: true,
   logging: false,
   entities:
